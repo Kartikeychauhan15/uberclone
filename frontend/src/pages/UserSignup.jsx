@@ -1,27 +1,49 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link , useNavigate} from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/userContext";
+
+
 
 const UserSignup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("")
-    const [firstname, setFirstname] = useState("")
-    const [lastname, setLastname] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
     const [userData, setUserData] = useState({})
 
     const navigate = useNavigate();
-    
-    const submitHandler = (e) => {
+
+    const {user , setUser} = useContext(UserDataContext);
+
+ 
+
+
+
+
+    const submitHandler = async (e) => {
         // Handle login logic here
         e.preventDefault(); //taaki web load ho to input uska chala na jaaye
         const newUser = {
-            fullName:{
-                firstName:firstName,
-                lastName:lastName
+            fullname:{
+                firstname:firstName,
+                lastname:lastName
             }, 
             email: email,
             password: password,
           }
-          
+
+           const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+          if(!response){
+            console.log("Error in signup");}
+
+          if(response.status === 201){
+            const data = response.data
+            setUser(data.user)
+            localStorage.setItem("token", data.token)
+            navigate("/home")
+          }
+
         // setUserData({
         //     fullName:{
         //         firstName:firstName,
@@ -32,8 +54,8 @@ const UserSignup = () => {
         // })
         // console.log(userData);
         setEmail("");
-        setFirstname("");
-        setLastname("");
+        setFirstName("");
+        setLastName("");
         setPassword("");
         // You can also send the data to your backend API for authentication
     }
@@ -58,16 +80,16 @@ const UserSignup = () => {
               className="bg-[#eeeeee] w-1/2  rounded px-4 py-2 border text-lg placeholder:text-base"
               type="text"
               placeholder="first name"
-              value={firstname}
-              onChange={(e)=>{setFirstname(e.target.value)}}
+              value={firstName}
+              onChange={(e)=>{setFirstName(e.target.value)}}
               required
             />
             <input
               className="bg-[#eeeeee] w-1/2  rounded px-4 py-2 border text-lg placeholder:text-base"
               type="text"
               placeholder="last name"
-              value={lastname}
-              onChange={(e)=>{setLastname(e.target.value)}}
+              value={lastName}
+              onChange={(e)=>{setLastName(e.target.value)}}
               required
             />
           </div>

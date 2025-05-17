@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserDataContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserLogin = () => {
     const [email, setEmail] = useState("");
@@ -7,14 +10,33 @@ const UserLogin = () => {
 
     const [userData, setUserData] = useState({})
 
+    const {user , setUser} = useContext(UserDataContext);
+    const navigate = useNavigate();
 
-    const submitHandler = (e) => {
+    const submitHandler =async (e) => {
         // Handle login logic here
         e.preventDefault(); //taaki web load ho to input uska chala na jaaye
-        setUserData({
-            email: email,
-            password: password,
-        });
+        const userData = {
+          email:email,
+          password:password
+        }
+        console.log(userData);
+
+        const response =await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+        if(response.status === 200){
+          
+          const data = response.data
+          setUser(data.user)
+          localStorage.setItem("token", data.token)
+          console.log("Login successful");
+          // console.log(data.user);
+          navigate("/home");
+        }
+        
+        // setUserData({
+        //     email: email,
+        //     password: password,
+        // });
         // console.log(userData);
         // You can also send the data to your backend API for authentication
        setEmail("");
