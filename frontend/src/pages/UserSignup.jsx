@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 const UserSignup = () => {
     const [email, setEmail] = useState("");
@@ -8,18 +8,28 @@ const UserSignup = () => {
     const [lastname, setLastname] = useState("")
     const [userData, setUserData] = useState({})
 
+    const navigate = useNavigate();
     
     const submitHandler = (e) => {
         // Handle login logic here
         e.preventDefault(); //taaki web load ho to input uska chala na jaaye
-        setUserData({
+        const newUser = {
             fullName:{
                 firstName:firstName,
                 lastName:lastName
-            },
-            password: password,
+            }, 
             email: email,
-        })
+            password: password,
+          }
+          
+        // setUserData({
+        //     fullName:{
+        //         firstName:firstName,
+        //         lastName:lastName
+        //     },
+        //     password: password,
+        //     email: email,
+        // })
         // console.log(userData);
         setEmail("");
         setFirstname("");
@@ -81,7 +91,7 @@ const UserSignup = () => {
             required
           />
           <button className="bg-[#111] mb-3 rounded px-4 py-2  w-full text-white placeholder:text-semibold">
-            Login
+            Create account
           </button>
         </form>
         <p className="text-center">
