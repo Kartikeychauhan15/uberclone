@@ -12,9 +12,12 @@ const UserProtectedWrapper = ({
     const [ isLoading, setIsLoading ] = useState(true)
 
     useEffect(() => {
-        if (!token) {
+        if (!token) {  
             navigate('/login')
+            return;
         }
+        // console.log(token);
+        // Fetch user profile
 
         axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`, {
             headers: {
@@ -24,14 +27,16 @@ const UserProtectedWrapper = ({
             if (response.status === 200) {
                 setUser(response.data)
                 setIsLoading(false)
+                // navigate('/home')
+                setTimeout(() => navigate('/home'), 0);
             }
         })
             .catch(err => {
-                console.log(err)
+                console.error('Error fetching user profile:', err.response || err);
                 localStorage.removeItem('token')
                 navigate('/login')
             })
-    }, [ token ])
+    }, [ token ,navigate])
 
     if (isLoading) {
         return (

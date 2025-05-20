@@ -31,7 +31,9 @@ const UserLogin = () => {
           console.log("Login successful");
           // console.log(data.user);
           navigate("/home");
-        }
+        }else {
+            console.error('Login failed');
+      }
         
         // setUserData({
         //     email: email,
