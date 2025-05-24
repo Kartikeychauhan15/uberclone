@@ -1,7 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+// import { endRide } from "../../../Backend/services/ride.service";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FinishRide = (props) => {
+  const navigate = useNavigate()
+  async function endRide() {
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`,{
+      rideId: props.ride._id
+    },{
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+    if(response.status === 200){
+      // props.setFinishRidePanel(false)
+      navigate("/captain-home")
+    }
+  
+    
+  }
+
   return (
     <div className="">
       <h5
@@ -23,7 +43,7 @@ const FinishRide = (props) => {
             src="https://plus.unsplash.com/premium_photo-1688891564708-9b2247085923?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fHww"
             alt="harsh patel"
           />
-          <h2 className="text-lg font-medium">Harsh Patel</h2>
+          <h2 className="text-lg font-medium">{props.ride?.user.fullname.firstname}</h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
@@ -35,7 +55,7 @@ const FinishRide = (props) => {
             <div className="">
               <h3 className="text-lg font-medium">562/11-A</h3>
               <p className="text-sm -mt-1 text-gray-600">
-                Kankariya Talab , Bhopal
+               {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -44,14 +64,14 @@ const FinishRide = (props) => {
             <div>
               <h3 className="text-lg font-medium">562/11-A</h3>
               <p className="text-sm -mt-1 text-gray-600">
-                Kankariya Talab , Bhopal
+                {props.ride?.destination}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 ">
             <i className=" text-lg ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">193/-</h3>
+              <h3 className="text-lg font-medium">{props.ride?.fare}/-</h3>
               <p className="text-sm -mt-1 text-gray-600">Cash Cash</p>
             </div>
           </div>
@@ -60,12 +80,12 @@ const FinishRide = (props) => {
         <div className="mt-6 w-full">
          
             
-            <Link
-              to="/captain-home"
+            <button
+             onClick={endRide}
               className="  flex justify-center mt-5 w-full bg-green-600 text-white font-semibold p-3 rounded-lg"
             >
               Finish Ride
-            </Link>
+            </button>
 
             {/* <p className=" mt-10 text-xs">click on finish ride btn if you have completed the payment</p> */}
        
